@@ -1,14 +1,23 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
-export default defineConfig({
-  plugins: [react()],
-  build: {
-    outDir: "dist",
-  },
-  server: {
-    // usually not needed for prod build but you can specify port if previewing
-    port: 3000,
-  },
-  // You can add proxy here if you want in dev mode, but usually not in prod build
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd());
+
+  return {
+    plugins: [react()],
+    build: {
+      outDir: "dist",
+    },
+    define: {
+      "process.env": env, // if needed for older code
+    },
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
+    },
+    base: "/", // important for Nginx to resolve routes correctly
+  };
 });

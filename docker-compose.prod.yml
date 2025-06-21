@@ -14,7 +14,6 @@ services:
       - mongo
     ports:
       - "5000:5000"
-    restart: unless-stopped
     networks:
       - mern-network
 
@@ -22,11 +21,25 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
+      # args:
+      #   VITE_BACKEND_URL: /auth
+    volumes:
+      - frontend_dist:/app/dist
+    command: echo "Build completed"
+    networks:
+      - mern-network
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    restart: unless-stopped
     ports:
       - "80:80"
     depends_on:
-      - backend
-    restart: unless-stopped
+      - frontend
+    volumes:
+      - frontend_dist:/usr/share/nginx/html:ro
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - mern-network
 
@@ -50,8 +63,6 @@ services:
       - "8081:8081"
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
-      ME_CONFIG_MONGODB_PORT: 27017
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
     depends_on:
@@ -59,9 +70,10 @@ services:
     networks:
       - mern-network
 
+volumes:
+  mongo_data:
+  frontend_dist:
+
 networks:
   mern-network:
     driver: bridge
-
-volumes:
-  mongo_data:

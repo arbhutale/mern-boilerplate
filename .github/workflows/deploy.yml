@@ -1,0 +1,31 @@
+name: Deploy via SSH Password
+
+on:
+  push:
+    branches: [deployment_setup]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Copy project files to droplet
+        run: |
+          sshpass -p "${{ secrets.DROPLET_PASSWORD }}" rsync -avz \
+            --exclude=".git" \
+            --exclude="node_modules" \
+            ./ ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_IP }}:~/mern-app
+
+      - name: Deploy on droplet
+        run: |
+          sshpass -p "${{ secrets.DROPLET_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_IP }} << 'EOF'
+            cd ~/mern-app
+            docker compose -f docker-compose.prod.yml down
+            docker compose -f docker-compose.prod.yml up -d --build
+          EOF
