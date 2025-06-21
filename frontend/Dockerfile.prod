@@ -1,0 +1,30 @@
+# Step 1: Build React app using a non-Alpine Node image
+FROM node:18-slim AS build
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy the rest of the frontend source
+COPY . .
+
+# Build the frontend
+RUN npm run build
+
+# Step 2: Serve the build with nginx
+FROM nginx:stable-alpine AS production
+
+# Copy built files from previous stage
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Optional: Replace default nginx config
+COPY nginx.prod.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
