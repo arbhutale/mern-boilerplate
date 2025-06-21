@@ -20,6 +20,7 @@ jobs:
           sshpass -p "${{ secrets.DROPLET_PASSWORD }}" rsync -avz \
             --exclude=".git" \
             --exclude="node_modules" \
+            -e "ssh -o StrictHostKeyChecking=no" \
             ./ ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_IP }}:~/mern-app
 
       - name: Deploy on droplet
