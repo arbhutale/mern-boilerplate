@@ -1,3 +1,46 @@
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom background and text color classes */
+@layer utilities {
+  .bg-light {
+    background-color: theme('colors.light');
+  }
+  .bg-dark {
+    background-color: theme('colors.dark');
+  }
+  .text-secondary {
+    color: theme('colors.secondary');
+  }
+}
+
+body {
+  @apply bg-light text-secondary dark:bg-dark dark:text-white;
+}
+button {
+    @apply  text-white;
+  }
+  @layer components {
+  .btn {
+    @apply font-semibold rounded transition;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-orange-600 dark:bg-primary dark:hover:bg-orange-700;
+  }
+
+  .btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700;
+  }
+
+  .btn-warning {
+    @apply bg-yellow-500 text-white hover:bg-yellow-600;
+  }
+}
+

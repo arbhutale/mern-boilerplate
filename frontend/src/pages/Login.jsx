@@ -22,12 +22,15 @@ export default function Login() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, form);
+      console.log(`${import.meta.env.VITE_BACKEND_URL}auth/login`)
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}auth/login`, form);
       console.log(res)
       localStorage.setItem("token", res.data.token);
       
-      window.location.href = "/dashboard";
+      window.location.href = "/";
     } catch (err) {
+         console.log(`${import.meta.env.VITE_BACKEND_URL}auth/login`)
+      console.log(err)
       setError(err.response?.data?.error || "Login failed");
     } finally {
       setLoading(false);
