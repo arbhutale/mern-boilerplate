@@ -23,8 +23,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-      # args:
-      #   VITE_BACKEND_URL: /auth
+      args:
+        VITE_BACKEND_URL: /api
     volumes:
       - frontend_dist:/app/dist
     command: echo "Build completed"

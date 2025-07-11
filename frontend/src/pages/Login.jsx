@@ -22,7 +22,7 @@ export default function Login() {
     if (!validate()) return;
     setLoading(true);
     try {
-      console.log(`${import.meta.env.VITE_BACKEND_URL}auth/login`)
+      console.log(`${import.meta.env.VITE_BACKEND_URL}api/auth/login`)
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/auth/login`, form);
       console.log(res)
       localStorage.setItem("token", res.data.token);
