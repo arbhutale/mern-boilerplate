@@ -23,7 +23,7 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // HeroUI
-import { HeroUIProvider } from "@heroui/react";
+// import { HeroUIProvider } from "@heroui/react";
 
 
 
@@ -31,7 +31,7 @@ import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <HeroUIProvider>
+    {/* <HeroUIProvider> */}
       <Provider store={store}>
         <BrowserRouter>
           <main className="relative min-h-screen overflow-visible bg-white text-black  transition-colors duration-300 ">
@@ -118,6 +118,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           </main>
         </BrowserRouter>
       </Provider>
-    </HeroUIProvider>
+    {/* </HeroUIProvider> */}
   </React.StrictMode>
 );
