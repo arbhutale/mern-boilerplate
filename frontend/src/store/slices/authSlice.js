@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchUser = createAsyncThunk(
-  "auth/me",
+  "api/auth/me",
   async (_, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;

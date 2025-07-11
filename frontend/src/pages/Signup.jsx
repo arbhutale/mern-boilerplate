@@ -30,7 +30,7 @@ export default function Signup() {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}auth/register`, form);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/auth/register`, form);
       localStorage.setItem("token", res.data.token);
       dispatch(loginSuccess(res.data.token));
       window.location.href = "/";
