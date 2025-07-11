@@ -1,92 +1,159 @@
 import Category from "../models/Category.js";
 import SubCategory from "../models/SubCategory.js";
 
-// ---- CATEGORY CRUD ----
 export const createCategory = async (req, res) => {
   try {
-    const category = await Category.create({ ...req.body, user: req.user.id });
+    const { name } = req.body;
+    const existing = await Category.findOne({ user: req.user.id, name });
+    if (existing) {
+      return res.status(400).json({ error: "Category already exists" });
+    }
+
+    const category = new Category({ user: req.user.id, name });
+    await category.save();
     res.status(201).json(category);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };
 
-export const getAllCategories = async (req, res) => {
-  const categories = await Category.find({ user: req.user.id });
-  res.json(categories);
+export const getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find({ user: req.user.id });
+    res.json(categories);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch categories" });
+  }
 };
 
 export const getCategoryById = async (req, res) => {
-  const category = await Category.findOne({ _id: req.params.id, user: req.user.id });
-  if (!category) return res.status(404).json({ error: "Category not found" });
-  res.json(category);
+  try {
+    const category = await Category.findOne({ _id: req.params.id, user: req.user.id });
+    if (!category) return res.status(404).json({ error: "Not found" });
+    res.json(category);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch category" });
+  }
 };
 
 export const updateCategory = async (req, res) => {
-  const category = await Category.findOneAndUpdate(
-    { _id: req.params.id, user: req.user.id },
-    req.body,
-    { new: true }
-  );
-  if (!category) return res.status(404).json({ error: "Category not found" });
-  res.json(category);
+  try {
+    const updated = await Category.findOneAndUpdate(
+      { _id: req.params.id, user: req.user.id },
+      { name: req.body.name },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ error: "Category not found" });
+    res.json(updated);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 export const deleteCategory = async (req, res) => {
-  const category = await Category.findOneAndDelete({ _id: req.params.id, user: req.user.id });
-  if (!category) return res.status(404).json({ error: "Category not found" });
-
-  await SubCategory.deleteMany({ category: category._id });
-  res.json({ message: "Category and its subcategories deleted" });
+  try {
+    const deleted = await Category.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+    if (!deleted) return res.status(404).json({ error: "Category not found" });
+    res.json({ message: "Deleted" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete" });
+  }
 };
 
-// ---- SUBCATEGORY CRUD ----
 export const createSubCategory = async (req, res) => {
-  const { categoryId } = req.params;
   try {
-    const sub = await SubCategory.create({
-      name: req.body.name,
-      user: req.user.id,
+    const { name } = req.body;
+    const { categoryId } = req.params;
+
+    const subCategory = new SubCategory({
+      name,
       category: categoryId,
+      user: req.user.id,
     });
-    res.status(201).json(sub);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+
+    await subCategory.save();
+    res.status(201).json(subCategory);
+  } catch (error) {
+    res.status(400).json({ error: "Failed to create subcategory" });
   }
 };
 
 export const getAllSubCategories = async (req, res) => {
-  const { categoryId } = req.params;
-  const subs = await SubCategory.find({ category: categoryId, user: req.user.id });
-  res.json(subs);
+  try {
+    const { categoryId } = req.params;
+
+    const subCategories = await SubCategory.find({
+      category: categoryId,
+      user: req.user.id,
+    });
+
+    res.json(subCategories);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch subcategories" });
+  }
 };
 
 export const getSubCategoryById = async (req, res) => {
-  const sub = await SubCategory.findOne({
-    _id: req.params.subId,
-    category: req.params.categoryId,
-    user: req.user.id,
-  });
-  if (!sub) return res.status(404).json({ error: "Subcategory not found" });
-  res.json(sub);
+  try {
+    const { categoryId, subId } = req.params;
+
+    const subCategory = await SubCategory.findOne({
+      _id: subId,
+      category: categoryId,
+      user: req.user.id,
+    });
+
+    if (!subCategory) {
+      return res.status(404).json({ error: "Subcategory not found" });
+    }
+
+    res.json(subCategory);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch subcategory" });
+  }
 };
 
 export const updateSubCategory = async (req, res) => {
-  const sub = await SubCategory.findOneAndUpdate(
-    { _id: req.params.subId, category: req.params.categoryId, user: req.user.id },
-    req.body,
-    { new: true }
-  );
-  if (!sub) return res.status(404).json({ error: "Subcategory not found" });
-  res.json(sub);
+  try {
+    const { categoryId, subId } = req.params;
+    const { name } = req.body;
+
+    const subCategory = await SubCategory.findOneAndUpdate(
+      {
+        _id: subId,
+        category: categoryId,
+        user: req.user.id,
+      },
+      { name },
+      { new: true }
+    );
+
+    if (!subCategory) {
+      return res.status(404).json({ error: "Subcategory not found" });
+    }
+
+    res.json(subCategory);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update subcategory" });
+  }
 };
 
 export const deleteSubCategory = async (req, res) => {
-  const sub = await SubCategory.findOneAndDelete({
-    _id: req.params.subId,
-    category: req.params.categoryId,
-    user: req.user.id,
-  });
-  if (!sub) return res.status(404).json({ error: "Subcategory not found" });
-  res.json({ message: "Subcategory deleted" });
+  try {
+    const { categoryId, subId } = req.params;
+
+    const subCategory = await SubCategory.findOneAndDelete({
+      _id: subId,
+      category: categoryId,
+      user: req.user.id,
+    });
+
+    if (!subCategory) {
+      return res.status(404).json({ error: "Subcategory not found" });
+    }
+
+    res.json({ message: "Subcategory deleted" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete subcategory" });
+  }
 };

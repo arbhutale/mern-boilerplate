@@ -33,7 +33,7 @@ export default function Signup() {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}auth/register`, form);
       localStorage.setItem("token", res.data.token);
       dispatch(loginSuccess(res.data.token));
-      window.location.href = "/dashboard";
+      window.location.href = "/";
     } catch (err) {
       setError(err.response?.data?.error || "Signup failed");
     } finally {

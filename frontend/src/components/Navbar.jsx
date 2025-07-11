@@ -3,26 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import useDarkMode from "../hooks/useDarkMode";
 
 export default function Navbar() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.auth.user);
 
-    const [isDark, setIsDark] = useState(() => localStorage.getItem("theme") === "dark");
+    const { isDark, toggleDarkMode } = useDarkMode();
     const [themeMenuOpen, setThemeMenuOpen] = useState(false);
 
-    const toggleDarkMode = () => {
-        const html = document.documentElement;
-        if (isDark) {
-            html.classList.remove("dark");
-            localStorage.setItem("theme", "light");
-        } else {
-            html.classList.add("dark");
-            localStorage.setItem("theme", "dark");
-        }
-        setIsDark(!isDark);
-    };
 
     const handleLogout = () => {
         dispatch(logout());
@@ -36,14 +26,15 @@ export default function Navbar() {
                 <div className="flex items-center space-x-6">
                     {/* Brand */}
                     <div className="flex items-center space-x-2 cursor-pointer font-bold text-lg">
-                        <img src="/logo.png" className="h-8 w-8 bg-white rounded-full" />
-                        <span>Bootswatch</span>
+                        {/* https://ibb.co/TDSLL3P9 */}
+                        <img src="https://i.ibb.co/j92RRX3n/Chat-GPT-Image-Jun-30-2025-05-00-46-PM.png" className="h-8 w-8 bg-white rounded-full" />
+                        <span>Bhutale Board</span>
                     </div>
 
                     {/* Nav Links */}
                     <div className="hidden md:flex space-x-4 items-center">
                         {/* Themes Dropdown */}
-                      <NavLink
+                        <NavLink
                             to="/"
                             className={({ isActive }) =>
                                 `px-2 py-1 rounded${isActive ? "text-white font-semibold" : " text-[#FFFFFF8C]  hover:text-[#FFFFFFBF]"
@@ -54,27 +45,36 @@ export default function Navbar() {
                         </NavLink>
 
                         <NavLink
-                            to="/help"
+                            to="/bank"
                             className={({ isActive }) =>
                                 `px-2 py-1 rounded  ${isActive ? "text-white font-semibold" : "text-[#FFFFFF8C] hover:text-[#FFFFFFBF]"
                                 }`
                             }
                         >
-                            Help
+                            Bank
+                        </NavLink>
+                        <NavLink
+                            to="/cc"
+                            className={({ isActive }) =>
+                                `px-2 py-1 rounded  ${isActive ? "text-white font-semibold" : "text-[#FFFFFF8C] hover:text-[#FFFFFFBF]"
+                                }`
+                            }
+                        >
+                            Credit Card
                         </NavLink>
 
                         <NavLink
-                            to="/blog"
-                             className={({ isActive }) =>
+                            to="/pm"
+                            className={({ isActive }) =>
                                 `px-2 py-1 rounded ${isActive ? "text-white font-semibold" : "text-[#FFFFFF8C] hover:text-[#FFFFFFBF]"
                                 }`
                             }
                         >
-                            Blog
+                            Payment
                         </NavLink>
 
                         <NavLink
-                            to="/united"
+                            to="/tr"
                             className={({ isActive }) =>
                                 `px-2 py-1 rounded ${isActive ? "text-white font-semibold" : " text-[#FFFFFF8C]  hover:text-[#FFFFFFBF]"
                                 }`
@@ -95,14 +95,9 @@ export default function Navbar() {
                     {/* <div className="text-sm bg-white text-primary px-2 py-1 rounded font-semibold cursor-pointer">v5.3 ▾</div> */}
 
                     {/* Theme toggle (same icon as bootswatch) */}
-                    <button
-                        onClick={toggleDarkMode}
-                        title="Toggle Theme"
-                        className="text-white text-lg"
-                    >
-                        {isDark ? "🌙" : "☀️"}
-                    </button>
-
+                    <button onClick={toggleDarkMode}>
+      {isDark ? "🌙 Dark Mode" : "☀️ Light Mode"}
+    </button>
                     {/* User dropdown */}
                     {user && (
                         <div className="relative group">

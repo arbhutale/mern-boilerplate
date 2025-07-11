@@ -3,17 +3,18 @@ import LoanAccount from "../models/LoanAccount.js";
 /**
  * Helper: Calculate remaining EMI, principal, interest, and balance
  */
-const calculateLoanStats = (loan) => {
-  const { loanAmount, interestRate, tenureMonths, startDate, emiPaid } = loan;
-  const monthlyRate = interestRate / 12 / 100;
+const calculateLoanStats = ({ principal, roi, termMonths, emiSchedule = [] }) => {
+  const monthlyRate = roi / 12 / 100;
 
   const emi =
-    (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths)) /
-    (Math.pow(1 + monthlyRate, tenureMonths) - 1);
+    (principal * monthlyRate * Math.pow(1 + monthlyRate, termMonths)) /
+    (Math.pow(1 + monthlyRate, termMonths) - 1);
 
-  const totalPayment = emi * tenureMonths;
-  const totalInterest = totalPayment - loanAmount;
-  const remainingEMI = tenureMonths - emiPaid;
+  const totalPayment = emi * termMonths;
+  const totalInterest = totalPayment - principal;
+
+  const paidEMICount = emiSchedule.filter(e => e.isPaid).length;
+  const remainingEMI = termMonths - paidEMICount;
   const remainingAmount = emi * remainingEMI;
 
   return {
@@ -24,11 +25,36 @@ const calculateLoanStats = (loan) => {
   };
 };
 
+/**
+ * Helper: Generate EMI schedule
+ */
+const generateEmiSchedule = (loan, emiAmount) => {
+  const schedule = [];
+  const start = new Date(loan.startDate);
+
+  for (let i = 0; i < loan.termMonths; i++) {
+    const dueDate = new Date(start);
+    dueDate.setMonth(start.getMonth() + i);
+
+    schedule.push({
+      dueDate,
+      amount: parseFloat(emiAmount.toFixed(2)),
+      isPaid: false,
+    });
+  }
+
+  return schedule;
+};
+
 // ➕ Create loan
 export const createLoanAccount = async (req, res) => {
   try {
     const loan = new LoanAccount(req.body);
+
+    // Calculate stats and generate EMI schedule
     const stats = calculateLoanStats(loan);
+    loan.emiSchedule = generateEmiSchedule(loan, stats.emi);
+
     Object.assign(loan, stats);
 
     await loan.save();
@@ -64,21 +90,30 @@ export const getLoanAccountById = async (req, res) => {
 // 🔄 Update loan
 export const updateLoanAccount = async (req, res) => {
   try {
-    const updated = await LoanAccount.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    // Fetch the original loan
+    const loan = await LoanAccount.findById(req.params.id);
+    if (!loan) return res.status(404).json({ error: "Loan not found" });
 
-    if (!updated) return res.status(404).json({ error: "Loan not found" });
+    // Apply updates from request
+    Object.assign(loan, req.body);
 
-    const stats = calculateLoanStats(updated);
-    Object.assign(updated, stats);
+    // Recalculate EMI stats
+    const stats = calculateLoanStats(loan);
 
-    await updated.save();
-    res.status(200).json(updated);
+    // Regenerate EMI schedule based on new startDate and termMonths
+    loan.emiSchedule = generateEmiSchedule(loan, stats.emi);
+
+    // Merge new stats
+    Object.assign(loan, stats);
+
+    // Save
+    await loan.save();
+    res.status(200).json(loan);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
+
 
 // ❌ Delete loan
 export const deleteLoanAccount = async (req, res) => {

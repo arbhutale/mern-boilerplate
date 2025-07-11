@@ -3,10 +3,10 @@ import CreditCard from "../models/CreditCard.js";
 import LoanAccount from "../models/LoanAccount.js";
 
 export async function applyTransactionBalanceChange(transaction, reverse = false) {
-  const { amount, transactionType, sourceTypeRef, sourceId } = transaction;
+  const { amount, transactionType, sourceType, sourceId } = transaction;
   const actualAmount = reverse ? -amount : amount;
 
-  if (sourceTypeRef === "BankAccount") {
+  if (sourceType === "BANK_ACCOUNT") {
     const bank = await BankAccount.findById(sourceId);
     if (!bank) return;
 
@@ -14,7 +14,7 @@ export async function applyTransactionBalanceChange(transaction, reverse = false
     await bank.save();
   }
 
-  if (sourceTypeRef === "CreditCard") {
+  if (sourceType === "CREDIT_CARD") {
     const card = await CreditCard.findById(sourceId);
     if (!card) return;
 
@@ -24,7 +24,7 @@ export async function applyTransactionBalanceChange(transaction, reverse = false
     await card.save();
   }
 
-  if (sourceTypeRef === "LoanAccount") {
+  if (sourceType === "LOAN_ACCOUNT") {
     const loan = await LoanAccount.findById(sourceId);
     if (!loan) return;
 

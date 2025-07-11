@@ -9,7 +9,7 @@ const emiSchema = new mongoose.Schema({
 
 const loanAccountSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  bankAccount: { type: mongoose.Schema.Types.ObjectId, ref: 'BankAccount' },
+  bankAccount: String,
   principal: Number,
   roi: Number, // rate of interest
   termMonths: Number,

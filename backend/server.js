@@ -22,6 +22,6 @@ app.use("/api", routes );
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("✅ Connected to MongoDB");
-    app.listen(5000,'0.0.0.0', () => console.log("🚀 Backend running on http://localhost:5000"));
+    app.listen(5001, () => console.log("🚀 Backend running on http://localhost:5001"));
   })
   .catch(err => console.error("❌ MongoDB connection error:", err));

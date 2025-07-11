@@ -1,12 +1,16 @@
-FROM node:18
+FROM --platform=linux/arm64 node:20-bullseye
 
 WORKDIR /app
 
-COPY package*.json ./
-# Ensure devDependencies like nodemon are installed
-ENV NODE_ENV=development
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
-RUN npm install --include=dev
+COPY package*.json ./
+
+ENV NODE_ENV=development
+ENV ROLLUP_NO_NATIVE=true 
+
+RUN npm install -g pnpm && pnpm install
+# RUN npm install @nextui-org/react@latest --lega
 
 COPY . .
 

@@ -1,7 +1,7 @@
 import express from "express";
 import {
   createCategory,
-  getAllCategories,
+  getCategories,
   getCategoryById,
   updateCategory,
   deleteCategory,
@@ -11,6 +11,7 @@ import {
   updateSubCategory,
   deleteSubCategory
 } from "../controllers/categoryController.js";
+
 import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -36,7 +37,7 @@ const router = express.Router();
  *       200:
  *         description: List of categories
  */
-router.get("/", authenticateToken, getAllCategories);
+router.get("/", authenticateToken, getCategories);
 
 /**
  * @swagger
@@ -128,9 +129,9 @@ router.put("/:id", authenticateToken, updateCategory);
  */
 router.delete("/:id", authenticateToken, deleteCategory);
 
-//
+
 // ---- SUBCATEGORY ROUTES ----
-//
+
 
 /**
  * @swagger

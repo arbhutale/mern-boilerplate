@@ -44,6 +44,7 @@ export const deleteAccount = async (req, res) => {
     if (!account) return res.status(404).json({ error: "Account not found" });
     res.status(204).end();
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 };

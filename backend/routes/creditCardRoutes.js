@@ -19,7 +19,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /credit-cards:
+ * /api/credit-cards:
  *   post:
  *     summary: Create a credit card
  *     tags: [CreditCards]
@@ -31,12 +31,12 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             type: object
- *             required: [cardName, cardNumber]
+ *             required: [name, number]
  *             properties:
- *               cardName:
+ *               name:
  *                 type: string
  *                 example: HDFC Regalia
- *               cardNumber:
+ *               number:
  *                 type: string
  *                 example: 1234-5678-9012-3456
  *               description:
@@ -45,6 +45,12 @@ const router = express.Router();
  *               limit:
  *                 type: number
  *                 example: 200000
+ *               balance:
+ *                type: number
+ *                example: 10000
+ *               cvv:
+ *                 type: number
+ *                 example: 123
  *     responses:
  *       201:
  *         description: Credit card created
@@ -53,7 +59,7 @@ router.post("/", authenticateToken, createCreditCard);
 
 /**
  * @swagger
- * /credit-cards:
+ * /api/credit-cards:
  *   get:
  *     summary: Get all credit cards
  *     tags: [CreditCards]
@@ -67,7 +73,7 @@ router.get("/", authenticateToken, getCreditCards);
 
 /**
  * @swagger
- * /credit-cards/{id}:
+ * /api/credit-cards/{id}:
  *   get:
  *     summary: Get a credit card by ID
  *     tags: [CreditCards]
@@ -89,7 +95,7 @@ router.get("/:id", authenticateToken, getCreditCardById);
 
 /**
  * @swagger
- * /credit-cards/{id}:
+ * /api/credit-cards/{id}:
  *   put:
  *     summary: Update a credit card
  *     tags: [CreditCards]
@@ -108,12 +114,24 @@ router.get("/:id", authenticateToken, getCreditCardById);
  *           schema:
  *             type: object
  *             properties:
- *               cardName:
+ *               name:
  *                 type: string
+ *                 example: HDFC Regalia
+ *               number:
+ *                 type: string
+ *                 example: 1234-5678-9012-3456
  *               description:
  *                 type: string
+ *                 example: Travel card
  *               limit:
  *                 type: number
+ *                 example: 200000
+ *               balance:
+ *                type: number
+ *                example: 10000
+ *               cvv:
+ *                 type: number
+ *                 example: 123
  *     responses:
  *       200:
  *         description: Updated successfully
@@ -122,7 +140,7 @@ router.put("/:id", authenticateToken, updateCreditCard);
 
 /**
  * @swagger
- * /credit-cards/{id}:
+ * /api/credit-cards/{id}:
  *   delete:
  *     summary: Delete a credit card
  *     tags: [CreditCards]

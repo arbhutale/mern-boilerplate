@@ -52,6 +52,12 @@ router.get("/", authenticateToken, async (req, res) => {
  *                 type: string
  *               balance:
  *                 type: number
+ *               ifsc:
+ *                 type: string
+ *               branch:
+ *                 type: string
+ *               description:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Account created

@@ -10,9 +10,10 @@ const paymentMethodSchema = new mongoose.Schema({
     required: true,
   },
   details: {
-    cardNumber: String,     // For debit card
-    upiId: String,          // For UPI
-    netBankingId: String,   // Optional for net banking
+    number: String,     // For debit card
+    expiry: String,          // For UPI
+    secure: String,   // Optional for net banking
+    desc: String
   },
 });
 

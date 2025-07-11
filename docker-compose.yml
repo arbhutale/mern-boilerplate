@@ -22,16 +22,16 @@ services:
     build: ./backend
     container_name: backend
     ports:
-      - "5000:5000"
+      - "5001:5001"
     volumes:
-      - ./backend:/app
+      - ./backend:/app/
       - /app/node_modules 
     environment:
       - MONGO_URI=mongodb://mongo:27017/authdb
       - GOOGLE_CLIENT_ID=test-google-client-id
       - GOOGLE_CLIENT_SECRET=test-google-client-secret
       - JWT_SECRET=super-secret
-      - FRONTEND_URL=http://localhost:3000/api/
+      - FRONTEND_URL=http://localhost:3000
     depends_on:
       - mongo
 
@@ -44,9 +44,10 @@ services:
       - ./frontend:/app
       - /app/node_modules 
     environment:
-      - VITE_BACKEND_URL=http://localhost:5000/api/
+      - VITE_BACKEND_URL=http://localhost:5001/api/
     depends_on:
       - backend
+    command: npm run dev
 
 volumes:
   mongo-data:

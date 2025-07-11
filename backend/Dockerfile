@@ -17,7 +17,7 @@ RUN npm install --include=dev
 COPY . .
 
 # Expose the backend port
-EXPOSE 5000
+EXPOSE 5001
 
 # Start server
 CMD ["npm", "run", "dev"]

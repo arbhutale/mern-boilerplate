@@ -16,9 +16,7 @@
   }
 }
 
-body {
-  @apply bg-light text-secondary dark:bg-dark dark:text-white;
-}
+
 button {
     @apply  text-white;
   }

@@ -81,11 +81,13 @@ router.get("/:id", authenticateToken, getPaymentMethodById);
  *               details:
  *                 type: object
  *                 properties:
- *                   cardNumber:
+ *                   number:
  *                     type: string
- *                   upiId:
+ *                   expiry:
  *                     type: string
- *                   netBankingId:
+ *                   secure:
+ *                     type: string
+ *                   desc:
  *                     type: string
  *     responses:
  *       201:
@@ -119,11 +121,13 @@ router.post("/", authenticateToken, createPaymentMethod);
  *               details:
  *                 type: object
  *                 properties:
- *                   cardNumber:
+ *                   number:
  *                     type: string
- *                   upiId:
+ *                   expiry:
  *                     type: string
- *                   netBankingId:
+ *                   secure:
+ *                     type: string
+*                   desc:
  *                     type: string
  *     responses:
  *       200:

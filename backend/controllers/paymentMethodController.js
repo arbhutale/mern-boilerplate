@@ -8,6 +8,7 @@ export const createPaymentMethod = async (req, res) => {
     await paymentMethod.save();
     res.status(201).json(paymentMethod);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: "Failed to create payment method" });
   }
 };

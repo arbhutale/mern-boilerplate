@@ -2,3 +2,4 @@ backend/.env
 backend/.env.prod
 frontend/.env
 frontend/.env.prod
+frontend/.pnpm-store
