@@ -2,7 +2,7 @@ name: Deploy via SSH Password
 
 on:
   push:
-    branches: [deployment_setup]
+    branches: [finance_be]
 
 jobs:
   deploy:
