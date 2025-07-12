@@ -8,7 +8,7 @@ export const fetchUser = createAsyncThunk(
       const token = getState().auth.token;
       if (!token) throw new Error("No token available");
 
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/auth/me`, {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

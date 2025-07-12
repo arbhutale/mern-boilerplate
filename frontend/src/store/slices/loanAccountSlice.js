@@ -3,21 +3,21 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchLoanAccounts = createAsyncThunk("loan/fetchAll", async () => {
-  const res = await axios.get("/api/loan-accounts");
+  const res = await axios.get("/loan-accounts");
   return res.data;
 });
 
 export const createLoanAccount = createAsyncThunk("loan/create", async (data) => {
-  const res = await axios.post("/api/loan-accounts", data);
+  const res = await axios.post("/loan-accounts", data);
   return res.data;
 });
 export const updateLoanAccount = createAsyncThunk("loan/update", async ({ id, data }) => {
-  const res = await axios.put(`/api/loan-accounts/${id}`, data);
+  const res = await axios.put(`/loan-accounts/${id}`, data);
   return res.data;
 });
 
 export const deleteLoanAccount = createAsyncThunk("loan/delete", async (id) => {
-  await axios.delete(`/api/loan-accounts/${id}`);
+  await axios.delete(`/loan-accounts/${id}`);
   return id;
 });
 

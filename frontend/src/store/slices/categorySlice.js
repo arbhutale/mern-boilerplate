@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}api/categories`;
+const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/categories`;
 
 const getAuthHeader = (getState) => {
   const token = getState().auth.token;

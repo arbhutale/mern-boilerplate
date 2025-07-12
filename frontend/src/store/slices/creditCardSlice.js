@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Mock API base URL (adjust as needed)
-const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}api/credit-cards`;
+const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/credit-cards`;
 
 const getAuthHeader = (getState) => {
   const token = getState().auth.token;

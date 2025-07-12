@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
-const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}api/transactions`;
+const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/transactions`;
 
 const getAuthHeader = (getState) => {
   const token = getState().auth.token;
